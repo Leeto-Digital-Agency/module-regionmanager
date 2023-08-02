@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Leeto\RegionManager\Api\Data\GridInterface" type="Leeto\RegionManager\Model\Region" />
+
+    <virtualType name="Leeto\RegionManager\Model\ResourceModel\Region\Region\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">directory_country_region</argument>
+            <argument name="resourceModel" xsi:type="string">Leeto\RegionManager\Model\ResourceModel\Region</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Leeto\RegionManager\Model\ResourceModel\Country\Country\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">directory_country</argument>
+            <argument name="resourceModel" xsi:type="string">Leeto\RegionManager\Model\ResourceModel\Country</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="regions_listing_data_source" xsi:type="string">Leeto\RegionManager\Model\ResourceModel\Region\Region\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="countries_listing_data_source" xsi:type="string">Leeto\RegionManager\Model\ResourceModel\Country\Country\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

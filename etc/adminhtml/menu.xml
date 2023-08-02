@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">  
+    <menu>
+        <add id="Leeto_RegionManager::menu"
+            title="Region Manager"
+            module="Leeto_RegionManager"
+            sortOrder="20"
+            resource="Magento_Backend::content" />
+        <add id="Leeto_RegionManager::menu_item"
+            title="Manage Regions"
+            module="Leeto_RegionManager"
+            sortOrder="1"
+            action="regions/region/index"
+            parent="Leeto_RegionManager::menu"
+            resource="Magento_Backend::content" />
+        <add id="Leeto_RegionManager::menu_item_country"
+            title="Countries"
+            module="Leeto_RegionManager"
+            sortOrder="1"
+            action="regions/country/index"
+            parent="Leeto_RegionManager::menu"
+            resource="Magento_Backend::content" />
+    </menu>
+</config>
