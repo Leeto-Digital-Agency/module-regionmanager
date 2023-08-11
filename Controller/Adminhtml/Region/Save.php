@@ -2,20 +2,24 @@
 
 namespace Leeto\RegionManager\Controller\Adminhtml\Region;
 
-class Save extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+use Leeto\RegionManager\Model\RegionFactory;
+use Magento\Backend\App\Action\Context;
+
+class Save extends Action
 {
     /**
-     * @var \Leeto\RegionManager\Model\RegionFactory
+     * @var RegionFactory
      */
-    var $regionFactory;
+    protected $regionFactory;
 
     /**
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Leeto\RegionManager\Model\RegionFactory $regionFactory
+     * @param Context       $context
+     * @param RegionFactory $regionFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Leeto\RegionManager\Model\RegionFactory $regionFactory
+        Context $context,
+        RegionFactory $regionFactory
     ) {
         parent::__construct($context);
         $this->regionFactory = $regionFactory;

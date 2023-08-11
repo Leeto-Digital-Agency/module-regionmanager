@@ -2,7 +2,11 @@
 
 namespace Leeto\RegionManager\Model\ResourceModel\Country;
 
-class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Leeto\RegionManager\Model\Country as CountryModel;
+use Leeto\RegionManager\Model\ResourceModel\Country as CountryResourceModel;
+
+class Collection extends AbstractCollection
 {
     /**
      * @var string
@@ -13,6 +17,9 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      */
     protected function _construct()
     {
-        $this->_init('Leeto\RegionManager\Model\Country', 'Leeto\RegionManager\Model\ResourceModel\Country');
+        $this->_init(
+            CountryModel::class,
+            CountryResourceModel::class
+        );
     }
 }

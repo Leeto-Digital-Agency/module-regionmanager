@@ -3,13 +3,15 @@
 namespace Leeto\RegionManager\Model;
 
 use Leeto\RegionManager\Api\Data\GridInterface;
+use Magento\Framework\Model\AbstractModel;
+use Leeto\RegionManager\Model\ResourceModel\Region as RegionResourceModel;
 
-class Region extends \Magento\Framework\Model\AbstractModel implements GridInterface
+class Region extends AbstractModel implements GridInterface
 {
     /**
      * CMS page cache tag.
      */
-    const CACHE_TAG = 'directory_country_region';
+    public const CACHE_TAG = 'directory_country_region';
 
     /**
      * @var string
@@ -28,7 +30,7 @@ class Region extends \Magento\Framework\Model\AbstractModel implements GridInter
      */
     protected function _construct()
     {
-        $this->_init('Leeto\RegionManager\Model\ResourceModel\Region');
+        $this->_init(RegionResourceModel::class);
     }
     /**
      * Get EntityId.

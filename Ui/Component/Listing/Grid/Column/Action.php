@@ -10,7 +10,7 @@ use Magento\Framework\UrlInterface;
 class Action extends Column
 {
     /** Url path */
-    const ROW_EDIT_URL = 'regions/region/addrow';
+    public const ROW_EDIT_URL = 'regions/region/addrow';
     /** @var UrlInterface */
     protected $_urlBuilder;
 
@@ -34,8 +34,7 @@ class Action extends Column
         array $components = [],
         array $data = [],
         $editUrl = self::ROW_EDIT_URL
-    ) 
-    {
+    ) {
         $this->_urlBuilder = $urlBuilder;
         $this->_editUrl = $editUrl;
         parent::__construct($context, $uiComponentFactory, $components, $data);
@@ -56,7 +55,7 @@ class Action extends Column
                 if (isset($item['region_id'])) {
                     $item[$name]['edit'] = [
                         'href' => $this->_urlBuilder->getUrl(
-                            $this->_editUrl, 
+                            $this->_editUrl,
                             ['id' => $item['region_id']]
                         ),
                         'label' => __('Edit'),

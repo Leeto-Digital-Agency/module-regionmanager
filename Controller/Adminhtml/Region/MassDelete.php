@@ -2,12 +2,14 @@
 
 namespace Leeto\RegionManager\Controller\Adminhtml\Region;
 
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Backend\App\Action\Context;
+use Magento\Backend\App\Action;
 use Magento\Ui\Component\MassAction\Filter;
 use Leeto\RegionManager\Model\ResourceModel\Region\CollectionFactory;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\Controller\ResultFactory;
 
-class MassDelete extends \Magento\Backend\App\Action
+class MassDelete extends Action
 {
     /**
      * Massactions filter.​_
@@ -37,7 +39,7 @@ class MassDelete extends \Magento\Backend\App\Action
     }
 
     /**
-     * @return \Magento\Backend\Model\View\Result\Redirect
+     * @return Redirect
      */
     public function execute()
     {
@@ -60,5 +62,10 @@ class MassDelete extends \Magento\Backend\App\Action
     protected function _isAllowed()
     {
         return $this->_authorization->isAllowed('Leeto_RegionManager::row_data_delete');
+    }
+
+    public function isAllowed()
+    {
+        return $this->_isAllowed();
     }
 }

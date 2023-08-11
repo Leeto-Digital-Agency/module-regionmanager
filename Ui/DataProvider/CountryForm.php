@@ -2,29 +2,30 @@
 
 namespace Leeto\RegionManager\Ui\DataProvider;
 
+use Magento\Ui\DataProvider\AbstractDataProvider;
 use Leeto\RegionManager\Model\ResourceModel\Country\CollectionFactory;
 use Leeto\RegionManager\Model\ResourceModel\Region\CollectionFactory as RegionCollection;
 
-class CountryForm extends \Magento\Ui\DataProvider\AbstractDataProvider
+class CountryForm extends AbstractDataProvider
 {
     /**
-    * @var RegionCollection
-    */
+     * @var RegionCollection
+     */
     protected $regionCollection;
 
     /**
-    * @var CollectionFactory
-    */
+     * @var CollectionFactory
+     */
     protected $collection;
 
     /**
-     * @var                                                                       $name
-     * @var                                                                       $primaryFieldName
-     * @var                                                                       $requestFieldName
-     * @param \Leeto\RegionManager\Model\ResourceModel\Country\CollectionFactory  $collectionFactory
-     * @param \Leeto\RegionManager\Model\ResourceModel\Region\CollectionFactory   $regionCollection
-     * @param array                                                               $meta                                                       
-     * @param array                                                               $data
+     * @var                      $name
+     * @var                      $primaryFieldName
+     * @var                      $requestFieldName
+     * @param CollectionFactory  $collectionFactory
+     * @param RegionCollection   $regionCollection
+     * @param array              $meta
+     * @param array              $data
      */
     public function __construct(
         $name,

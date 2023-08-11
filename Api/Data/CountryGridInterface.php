@@ -7,8 +7,8 @@ interface CountryGridInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case.
      */
-    const ENTITY_ID = 'country_id';
-    const FORM_NAMESPACE = 'countries_form';
+    public const ENTITY_ID = 'country_id';
+    public const FORM_NAMESPACE = 'countries_form';
 
     /**
      * Get EntityId.
