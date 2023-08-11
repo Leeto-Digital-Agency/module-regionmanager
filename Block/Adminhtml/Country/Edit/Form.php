@@ -2,31 +2,37 @@
 
 namespace Leeto\RegionManager\Block\Adminhtml\Country\Edit;
 
+use Magento\Backend\Block\Widget\Form\Generic;
+use Magento\Store\Model\System\Store;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Registry;
+use Magento\Framework\Data\FormFactory;
+use Magento\Cms\Model\Wysiwyg\Config;
+
 /**
  * Adminhtml Add New Row Form.
  */
-class Form extends \Magento\Backend\Block\Widget\Form\Generic
+class Form extends Generic
 {
     /**
-     * @var \Magento\Store\Model\System\Store
+     * @var Store
      */
     protected $_systemStore;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry             $registry
-     * @param \Magento\Framework\Data\FormFactory     $formFactory
-     * @param \Magento\Cms\Model\Wysiwyg\Config       $wysiwygConfig
-     * @param array                                   $data
+     * @param Context       $context
+     * @param Registry      $registry
+     * @param FormFactory   $formFactory
+     * @param Config        $wysiwygConfig
+     * @param array         $data
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        \Magento\Cms\Model\Wysiwyg\Config $wysiwygConfig,
+        Context $context,
+        Registry $registry,
+        FormFactory $formFactory,
+        Config $wysiwygConfig,
         array $data = []
-    ) 
-    {
+    ) {
         $this->_wysiwygConfig = $wysiwygConfig;
         parent::__construct($context, $registry, $formFactory, $data);
     }
@@ -42,9 +48,9 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
         $model = $this->_coreRegistry->registry('row_data');
         $form = $this->_formFactory->create(
             ['data' => [
-                            'id' => 'edit_form', 
-                            'enctype' => 'multipart/form-data', 
-                            'action' => $this->getData('action'), 
+                            'id' => 'edit_form',
+                            'enctype' => 'multipart/form-data',
+                            'action' => $this->getData('action'),
                             'method' => 'post'
                         ]
             ]
@@ -82,5 +88,16 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
         $this->setForm($form);
 
         return parent::_prepareForm();
+    }
+
+    /**
+     * Check if the form is for editing an existing row.
+     *
+     * @return bool
+     */
+    public function isEditForm()
+    {
+        $model = $this->_coreRegistry->registry('row_data');
+        return (bool)$model->getEntityId();
     }
 }

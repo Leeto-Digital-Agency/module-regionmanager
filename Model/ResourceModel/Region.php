@@ -2,30 +2,33 @@
 
 namespace Leeto\RegionManager\Model\ResourceModel;
 
-class Region extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Model\ResourceModel\Db\Context;
+
+class Region extends AbstractDb
 {
     /**
      * @var string
      */
     protected $_idFieldName = 'region_id';
     /**
-     * @var \Magento\Framework\Stdlib\DateTime\DateTime
+     * @var DateTime
      */
     protected $_date;
 
     /**
      * Construct.
      *
-     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param \Magento\Framework\Stdlib\DateTime\DateTime       $date
-     * @param string|null                                       $resourcePrefix
+     * @param Context       $context
+     * @param DateTime      $date
+     * @param string|null   $resourcePrefix
      */
     public function __construct(
-        \Magento\Framework\Model\ResourceModel\Db\Context $context,
-        \Magento\Framework\Stdlib\DateTime\DateTime $date,
+        Context $context,
+        DateTime $date,
         $resourcePrefix = null
-    ) 
-    {
+    ) {
         parent::__construct($context, $resourcePrefix);
         $this->_date = $date;
     }

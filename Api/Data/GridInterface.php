@@ -7,10 +7,10 @@ interface GridInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case.
      */
-    const ENTITY_ID = 'region_id';
-    const COUNTRY_ID = 'country_id';
-    const CODE = 'code';
-    const DEFAULT_NAME = 'default_name';
+    public const ENTITY_ID = 'region_id';
+    public const COUNTRY_ID = 'country_id';
+    public const CODE = 'code';
+    public const DEFAULT_NAME = 'default_name';
 
     /**
      * Get EntityId.

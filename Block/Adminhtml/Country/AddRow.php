@@ -2,39 +2,20 @@
 
 namespace Leeto\RegionManager\Block\Adminhtml\Country;
 
-class AddRow extends \Magento\Backend\Block\Widget\Form\Container
+use Magento\Backend\Block\Widget\Form\Container;
+use Magento\Framework\Phrase;
+
+class AddRow extends Container
 {
-    /**
-     * Core registry.
-     *
-     * @var \Magento\Framework\Registry
-     */
-    protected $_coreRegistry = null;
-
-    /**
-     * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry           $registry
-     * @param array                                 $data
-     */
-    public function __construct(
-        \Magento\Backend\Block\Widget\Context $context,
-        \Magento\Framework\Registry $registry,
-        array $data = []
-    ) 
-    {
-        $this->_coreRegistry = $registry;
-        parent::__construct($context, $data);
-    }
-
     /**
      * Initialize Imagegallery Images Edit Block.
      */
     protected function _construct()
     {
+        parent::_construct();
         $this->_objectId = 'row_id';
         $this->_blockGroup = 'Leeto_RegionManager';
         $this->_controller = 'adminhtml_country';
-        parent::_construct();
         if ($this->_isAllowedAction('Leeto_RegionManager::add_row')) {
             $this->buttonList->update('save', 'label', __('Save'));
         } else {
@@ -46,7 +27,7 @@ class AddRow extends \Magento\Backend\Block\Widget\Form\Container
     /**
      * Retrieve text for header element depending on loaded image.
      *
-     * @return \Magento\Framework\Phrase
+     * @return Phrase
      */
     public function getHeaderText()
     {
