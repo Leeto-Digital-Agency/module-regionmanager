@@ -7,8 +7,6 @@ use Leeto\RegionManager\Model\RegionFactory;
 use Leeto\RegionManager\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Backend\App\Action\Context;
 
-use function PHPUnit\Framework\isEmpty;
-
 class Save extends Action
 {
     /**
