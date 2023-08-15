@@ -7,6 +7,8 @@ use Leeto\RegionManager\Model\RegionFactory;
 use Leeto\RegionManager\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Backend\App\Action\Context;
 
+use function PHPUnit\Framework\isEmpty;
+
 class Save extends Action
 {
     /**
@@ -38,88 +40,69 @@ class Save extends Action
     {
         $data = $this->getRequest()->getPostValue();
         $insertData = [];
+
         try {
             $rowData = $this->regionFactory->create();
 
-            foreach ($data['country_regions'] as $key => $region) {
-                $updated = false;
-                $error = false;
-                $insertData['country_id'] = $data['country_id'];
-                if ($region['code'] == $region['default_name']) {
-                    $this->messageManager->addError(__("Code cannot be the same as default name!", $region['code']));
-                    $error = true;
-                }
-                $existingRecordsByCode = $this->regionCollection->create()
-                    ->addFieldToFilter('country_id', $data['country_id'])
-                    ->addFieldToFilter('code', $region['code']);
-                //check if other records have the same code or default name when updating records and then throw an error
-                if ($existingRecordsByCode->count() > 0
-                    && (isset($region['region_id'])
-                    && ($existingRecordsByCode->getFirstItem()->getRegionId() != $region['region_id']))
-                ) {
-                    $this->messageManager->addError(__("Record with '%1' code already exists!", $region['code']));
-                    $error = true;
-                } else {
+            if (isset($data['country_regions'])) {
+                foreach ($data['country_regions'] as $key => $region) {
+                    $updated = false;
+                    $error = false;
+                    $insertData['country_id'] = $data['country_id'];
+
+                    if ($region['code'] == $region['default_name']
+                        && !empty($region['code'])
+                        && !empty($region['default_name'])
+                    ) {
+                        $this->messageManager->addError(
+                            __("Code cannot be the same as default name!", $region['code'])
+                        );
+                        $error = true;
+                    }
                     $insertData['code'] = $region['code'];
-                }
-                $existingRecordsByDefaultName = $this->regionCollection->create()
-                    ->addFieldToFilter('country_id', $data['country_id'])
-                    ->addFieldToFilter('default_name', $region['default_name']);
-                if ($existingRecordsByDefaultName->count() > 0
-                    && (isset($region['region_id'])
-                    && ($existingRecordsByDefaultName->getFirstItem()->getRegionId() != $region['region_id']))
-                ) {
-                    $this->messageManager->addError(
-                        __(
-                            "Record with '%1' Default Name already exists!",
-                            $region['default_name']
-                        )
-                    );
-                    $error = true;
-                } else {
                     $insertData['default_name'] = $region['default_name'];
+
+                    $rowData->setData($insertData);
+
+                    if (isset($region['region_id']) && $region['region_id']) {
+                        $rowData->setEntityId($region['region_id']);
+                    }
+                    if (!$error) {
+                        $rowData->save();
+                        $updated = true;
+                    }
+                    if (!isset($region['region_id']) || $region['region_id'] == '') {
+                        $data['country_regions'][$key]['region_id'] = $rowData->getRegionId();
+                    }
                 }
 
-                if (!isset($region['region_id'])
-                    && ($existingRecordsByCode->count() > 0
-                    || $existingRecordsByDefaultName->count() > 0)
-                ) {
-                    $this->messageManager->addError(__("Record already exists!"));
-                    $error = true;
-                }
-                $rowData->setData($insertData);
+                // get all the regions submited when saving
+                $dataRegions = array_map(function ($el) {
+                    if (isset($el['region_id'])) {
+                        return $el['region_id'];
+                    }
+                    return '';
+                }, $data['country_regions']);
 
-                if (isset($region['region_id']) && $region['region_id']) {
-                    $rowData->setEntityId($region['region_id']);
+                $regionsId = [];
+                // get all the regions currently assigned to this country
+                $countryOldRegions = $this->regionCollection->create()
+                    ->addFieldToFilter('country_id', $data['country_id'])
+                    ->getItems();
+                foreach ($countryOldRegions as $reg) {
+                    $regionsId[] = $reg->getData('region_id');
                 }
-                // when adding new records we need to check for duplicates
-                if (!$error) {
-                    $rowData->save();
-                    $updated = true;
-                }
-                if (!isset($region['region_id']) || $region['region_id'] == '') {
-                    $data['country_regions'][$key]['region_id'] = $rowData->getRegionId();
+                // determine which regions have been deleted and remove them from the table
+                $deletedRegionsIds = array_diff($regionsId, $dataRegions);
+            } else {
+                $deletedRegionsIds = [];
+                $regionsId = $this->regionCollection->create()
+                    ->addFieldToFilter('country_id', $data['country_id'])
+                    ->getItems();
+                foreach ($regionsId as $reg) {
+                    $deletedRegionsIds[] = $reg->getData('region_id');
                 }
             }
-
-            // get all the regions submited when saving
-            $dataRegions = array_map(function ($el) {
-                if (isset($el['region_id'])) {
-                    return $el['region_id'];
-                }
-                return '';
-            }, $data['country_regions']);
-
-            $regionsId = [];
-            // get all the regions currently assigned to this country
-            $countryOldRegions = $this->regionCollection->create()
-                ->addFieldToFilter('country_id', $data['country_id'])
-                ->getItems();
-            foreach ($countryOldRegions as $reg) {
-                $regionsId[] = $reg->getData('region_id');
-            }
-            // determine which regions have been deleted and remove them from the table
-            $deletedRegionsIds = array_diff($regionsId, $dataRegions);
             foreach ($deletedRegionsIds as $key => $deletedRegionId) {
                 $rowData->load($deletedRegionId);
                 $rowData->delete();

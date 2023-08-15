@@ -365,93 +365,37 @@ class SaveTest extends TestCase
      * @param array $data
      * @return void
      *
-     * @dataProvider dataProvidertestExecuteCodeAlreadyExists
+     * @dataProvider dataProviderExecuteDeleteAllRegions
      */
-    public function testExecuteCodeAlreadyExists($data)
+    public function testExecuteDeleteAllRegions($data)
     {
         $this->requestMock->expects($this->atLeastOnce())
             ->method('getPostValue')
             ->willReturn($data);
-        $region = $data['country_regions'][0];
-        
-        $this->regionCollectionMock->expects($this->any())->method('count')->willReturn(1);
-        $this->messageManagerInterfaceMock->expects($this->atLeastOnce())->method('addError')->willReturnSelf();
-
-        $this->regionModelMock->method('setData')
-            ->with(
+                
+        $this->regionFactoryMock->expects($this->once())->method('create')->willReturn($this->regionModelMock);
+        $this->regionCollectionFactoryMock->expects($this->once())
+            ->method('create')
+            ->willReturn($this->regionCollectionMock);
+        $this->regionCollectionMock->expects($this->once())->method('addFieldToFilter')
+            ->willReturn($this->regionCollectionMock);
+        $this->regionCollectionMock->method('getItems')
+            ->willReturn(
                 [
-                    'country_id' => $data['country_id'],
-                    'code' => $region['code'],
-                    'default_name' => $region['default_name']
+                    new DataObject(
+                        [
+                            'country_id' => 1,
+                            'code' => 'F',
+                            'default_name' => 'V',
+                            'region_id' => 4
+                        ]
+                    )
                 ]
             );
+        $this->regionModelMock->expects($this->atLeastOnce())->method('load')->willReturn($this->regionModelMock);
+        $this->regionModelMock->expects($this->atLeastOnce())->method('delete')->willReturn($this->regionModelMock);
+        $this->messageManagerInterfaceMock->expects($this->any())->method('addSuccess')->willReturnSelf();
 
-        $this->regionCollectionMock->method('getItems')
-            ->willReturn(new DataObject(
-                [
-                    'country_id' => 1,
-                    'code' => 'F',
-                    'default_name' => 'V',
-                    'region_id' => 4
-                ]
-            ));
-
-        $this->regionModelMock->method('load')->willReturnSelf();
-        $this->regionModelMock->method('delete')->willReturnSelf();
-                
-        $redirect = ResponseInterface::class;
-
-        if (isset($data['back']) && $data['back']) {
-            $this->requestMock->expects($this->atLeastOnce())
-                ->method('getParam')
-                ->with('back')
-                ->willReturn(true);
-        }
-        $this->backendHelperMock->expects($this->any())->method('getUrl')->willReturn('someUrl');
-
-        $this->assertInstanceOf($redirect, $this->saveController->execute());
-    }
-
-    /**
-     * Run test execute method
-     *
-     * @param array $data
-     * @return void
-     *
-     * @dataProvider dataProvidertestExecuteDefaultNameAlreadyExists
-     */
-    public function testExecuteDefaultNameAlreadyExists($data)
-    {
-        $this->requestMock->expects($this->atLeastOnce())
-            ->method('getPostValue')
-            ->willReturn($data);
-        $region = $data['country_regions'][0];
-        
-        $this->regionCollectionMock->expects($this->any())->method('count')->willReturn(1);
-        $this->messageManagerInterfaceMock->expects($this->atLeastOnce())->method('addError')->willReturnSelf();
-
-        $this->regionModelMock->method('setData')
-            ->with(
-                [
-                    'country_id' => $data['country_id'],
-                    'code' => $region['code'],
-                    'default_name' => $region['default_name']
-                ]
-            );
-
-        $this->regionCollectionMock->method('getItems')
-            ->willReturn(new DataObject(
-                [
-                    'country_id' => 1,
-                    'code' => 'F',
-                    'default_name' => 'V',
-                    'region_id' => 4
-                ]
-            ));
-
-        $this->regionModelMock->method('load')->willReturnSelf();
-        $this->regionModelMock->method('delete')->willReturnSelf();
-                
         $redirect = ResponseInterface::class;
 
         if (isset($data['back']) && $data['back']) {
@@ -512,44 +456,17 @@ class SaveTest extends TestCase
     }
 
     /**
-     * Data provider for ExecuteCodeSameAsDefaultName
+     * Data provider for ExecuteDeleteAllRegions
      *
      * @return array
      */
-    public function dataProvidertestExecuteCodeAlreadyExists()
+    public function dataProviderExecuteDeleteAllRegions()
     {
         return [
             [
                 [
-                    'country_regions' => [
-                        [
-                            'code' => 'US',
-                            'default_name' => 'B'
-                        ]
-                    ],
-                    'country_id' => 'C'
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * Data provider for ExecuteDefaultNameAlreadyExists
-     *
-     * @return array
-     */
-    public function dataProvidertestExecuteDefaultNameAlreadyExists()
-    {
-        return [
-            [
-                [
-                    'country_regions' => [
-                        [
-                            'code' => 'Z',
-                            'default_name' => 'NY'
-                        ]
-                    ],
-                    'country_id' => 'C'
+                    'country_id' => 'C',
+                    'back' => true
                 ]
             ]
         ];

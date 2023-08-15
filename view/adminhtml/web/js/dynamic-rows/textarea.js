@@ -7,9 +7,6 @@ define([
     return Abstract.extend({
         defaults: {
             visible: false,
-            validation: {
-                'required-entry': true
-            },
             modules: {
                 parentComponent: '${ $.recordsProvider }'
             },

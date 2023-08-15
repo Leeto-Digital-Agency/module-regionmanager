@@ -33,6 +33,13 @@ class Save extends Action
             return;
         }
         try {
+            if ($data['code'] == $data['default_name']
+                && !empty($data['code'])
+                && !empty($data['default_name'])
+            ) {
+                $this->messageManager->addError(__('Code cannot be the same as default name'));
+                return $this->_redirect('regions/region/index');
+            }
             $rowData = $this->regionFactory->create();
             $rowData->setData($data);
             if (isset($data['id'])) {
